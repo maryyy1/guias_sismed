@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guías SISMED — Red de Salud Coronel Portillo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FBF6E8;
+    --bg-card: #FFFFFF;
+    --ink: #23271D;
+    --ink-soft: #5B6154;
+    --jungle: #1B4332;
+    --leaf: #6B9B6E;
+    --river: #3A7CA5;
+    --river-soft: #E8F1F6;
+    --mango: #E8963C;
+    --mango-dark: #C97A2A;
+    --line: #E4DCC6;
+    --shadow: rgba(27, 67, 50, 0.08);
+    --focus: #3A7CA5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14201A; --bg-card: #1B2B22; --ink: #ECE7D6; --ink-soft: #A8AF9C;
+      --jungle: #7FBF9E; --leaf: #8BB98D; --river: #7FB8DC; --river-soft: #1E323D;
+      --mango: #F2AC5C; --mango-dark: #F2AC5C; --line: #2C3B31;
+      --shadow: rgba(0,0,0,0.35); --focus: #7FB8DC;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:'Nunito Sans',sans-serif; -webkit-font-smoothing:antialiased; }
+  body { min-height:100vh; padding:0 20px 64px; }
+  a { color: inherit; }
+  .wrap { max-width:620px; margin:0 auto; }
+  .topbar { display:flex; align-items:center; gap:10px; padding:28px 0 6px; }
+  .topbar-text { display:flex; flex-direction:column; line-height:1.15; }
+  .topbar-title { font-family:'Baloo 2',sans-serif; font-weight:700; font-size:20px; color:var(--jungle); }
+  .topbar-sub { font-size:13px; color:var(--ink-soft); font-weight:600; }
+  .hero { padding:20px 0 8px; }
+  .hero h1 { font-family:'Baloo 2',sans-serif; font-weight:800; font-size:clamp(28px,6vw,38px); line-height:1.12; margin:0 0 10px; letter-spacing:-0.01em; }
+  .hero p { font-size:16px; color:var(--ink-soft); margin:0 0 22px; max-width:46ch; line-height:1.5; }
+  .search-box { position:relative; }
+  .search-box svg { position:absolute; left:18px; top:50%; transform:translateY(-50%); color:var(--ink-soft); pointer-events:none; }
+  .search-box input { width:100%; font-family:'Nunito Sans',sans-serif; font-size:16px; font-weight:600; color:var(--ink); background:var(--bg-card); border:2px solid var(--line); border-radius:16px; padding:16px 18px 16px 50px; outline:none; transition:border-color .15s,box-shadow .15s; }
+  .search-box input::placeholder { color:var(--ink-soft); font-weight:600; opacity:.75; }
+  .search-box input:focus { border-color:var(--focus); box-shadow:0 0 0 4px color-mix(in srgb, var(--focus) 18%, transparent); }
+  .result-count { margin:14px 2px 0; font-size:13px; font-weight:700; color:var(--ink-soft); }
+  .list { margin-top:18px; display:flex; flex-direction:column; gap:10px; }
+  .puesto { background:var(--bg-card); border:1px solid var(--line); border-radius:18px; overflow:hidden; box-shadow:0 1px 2px var(--shadow); }
+  .puesto-btn { all:unset; box-sizing:border-box; display:flex; align-items:center; gap:14px; width:100%; padding:16px 18px; cursor:pointer; }
+  .puesto-btn:focus-visible { outline:3px solid var(--focus); outline-offset:-3px; border-radius:18px; }
+  .puesto-icon { flex-shrink:0; width:40px; height:40px; border-radius:12px; background:var(--river-soft); display:flex; align-items:center; justify-content:center; color:var(--river); font-family:'Baloo 2',sans-serif; font-weight:700; font-size:16px; }
+  .puesto-info { flex:1; min-width:0; text-align:left; }
+  .puesto-name { font-family:'Baloo 2',sans-serif; font-weight:600; font-size:17px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .puesto-count { font-size:13px; color:var(--ink-soft); font-weight:600; margin-top:1px; }
+  .chevron { flex-shrink:0; color:var(--ink-soft); transition:transform .2s; }
+  .puesto.open .chevron { transform:rotate(180deg); }
+  .puesto-body { display:grid; grid-template-rows:0fr; transition:grid-template-rows .25s; }
+  .puesto.open .puesto-body { grid-template-rows:1fr; }
+  .puesto-body-inner { overflow:hidden; }
+  .mes-block { padding:2px 18px 14px; }
+  .mes-label { font-size:12px; font-weight:800; color:var(--leaf); padding:10px 0 8px; border-top:1px solid var(--line); margin-top:4px; }
+  .mes-block:first-child .mes-label { border-top:none; margin-top:0; }
+  .archivo-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 0; }
+  .archivo-label { font-size:14.5px; font-weight:700; }
+  .archivo-file { display:block; font-size:11.5px; color:var(--ink-soft); font-weight:600; margin-top:1px; word-break:break-all; }
+  .dl-btn { flex-shrink:0; display:inline-flex; align-items:center; gap:6px; background:var(--mango); color:#2A1B0A; font-weight:800; font-size:13.5px; padding:9px 14px; border-radius:12px; text-decoration:none; white-space:nowrap; transition:background .15s, transform .1s; }
+  .dl-btn:hover { background:var(--mango-dark); }
+  .dl-btn:active { transform:scale(.97); }
+  .dl-btn:focus-visible { outline:3px solid var(--focus); outline-offset:2px; }
+  .estado { text-align:center; padding:48px 20px; color:var(--ink-soft); }
+  .estado svg { margin-bottom:14px; color:var(--leaf); }
+  .estado p { font-size:15px; font-weight:600; max-width:34ch; margin:0 auto; line-height:1.5; }
+  .spinner { width:28px; height:28px; border:3px solid var(--line); border-top-color:var(--leaf); border-radius:50%; animation:girar 0.8s linear infinite; margin:0 auto 14px; }
+  @keyframes girar { to { transform: rotate(360deg); } }
+  .footer { margin-top:40px; padding-top:20px; border-top:1px solid var(--line); display:flex; align-items:center; gap:8px; color:var(--ink-soft); font-size:12.5px; font-weight:600; }
+  @media (prefers-reduced-motion: reduce) { .chevron,.puesto-body,.dl-btn,.spinner { transition:none; animation:none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="17" cy="17" r="17" fill="#1B4332"/>
+      <path d="M17 7C12 7 9 11 9 15.5C9 21 13.5 25.5 17 28C20.5 25.5 25 21 25 15.5C25 11 22 7 17 7Z" fill="#6B9B6E"/>
+      <path d="M17 11V24M17 15L13.5 12.5M17 19L21 16" stroke="#1B4332" stroke-width="1.4" stroke-linecap="round"/>
+    </svg>
+    <div class="topbar-text">
+      <span class="topbar-title">Guías SISMED</span>
+      <span class="topbar-sub">Red de Salud Coronel Portillo · Pucallpa</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Descarga la guía de tu puesto de salud</h1>
+    <p>Busca el nombre de tu establecimiento y descarga el archivo directamente a tu celular o computadora.</p>
+    <div class="search-box">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="2"/>
+        <path d="M18 18L13.8 13.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input id="buscador" type="text" placeholder="Escribe el nombre de tu puesto..." autocomplete="off" disabled>
+    </div>
+    <div class="result-count" id="contador"></div>
+  </section>
+
+  <div class="list" id="lista"></div>
+
+  <div class="estado" id="estado">
+    <div class="spinner"></div>
+    <p>Cargando las guías desde el repositorio...</p>
+  </div>
+
+  <footer class="footer">
+    <span>🌿</span>
+    <span id="pieTexto">Se actualiza automáticamente</span>
+  </footer>
+</div>
+
+<script>
+const USUARIO = 'maryyy1';
+const REPO = 'guias_sismed';
+const RAMA = 'main';
+
+const EXCEPCIONES = {
+  '07 DE JUNIO': '07 de Junio',
+  '09 DE OCTUBRE': '09 de Octubre',
+  'MICAELA BASTIDAS': 'Micaela Bastidas',
+  'NUEVA PUCALLPA KM 13.5': 'Nueva Pucallpa Km 13.5',
+  'NUEVO AMANECER': 'Nuevo Amanecer',
+  'PROCERES': 'Próceres',
+  'SAN FERNANDO': 'San Fernando',
+  'LA FLORIDA': 'La Florida'
+};
+const MENORES = ['de', 'la', 'del'];
+
+function nombreBonito(raw) {
+  if (EXCEPCIONES[raw]) return EXCEPCIONES[raw];
+  return raw.toLowerCase().split(' ').map((p, i) => {
+    if (i > 0 && MENORES.includes(p)) return p;
+    return p.charAt(0).toUpperCase() + p.slice(1);
+  }).join(' ');
+}
+
+function iniciales(nombre) {
+  const partes = nombre.split(' ').filter(p => !MENORES.includes(p.toLowerCase()));
+  return (partes[0]?.[0] || '') + (partes[1]?.[0] || '');
+}
+
+const lista = document.getElementById('lista');
+const buscador = document.getElementById('buscador');
+const contador = document.getElementById('contador');
+const estado = document.getElementById('estado');
+const pieTexto = document.getElementById('pieTexto');
+
+let DATA = [];
+
+async function cargar() {
+  try {
+    const resp = await fetch(`https://api.github.com/repos/${USUARIO}/${REPO}/git/trees/${RAMA}?recursive=1`);
+    if (!resp.ok) throw new Error('respuesta no válida');
+    const json = await resp.json();
+
+    const estructura = {};
+    (json.tree || []).forEach(item => {
+      if (item.type !== 'blob') return;
+      if (!/\.(zip|pdf)$/i.test(item.path)) return;
+      const partes = item.path.split('/');
+      if (partes.length < 3) return;
+      const [puesto, mes, ...resto] = partes;
+      const archivo = resto.join('/');
+      estructura[puesto] = estructura[puesto] || {};
+      estructura[puesto][mes] = estructura[puesto][mes] || [];
+      estructura[puesto][mes].push({ filename: archivo, path: item.path });
+    });
+
+    DATA = Object.keys(estructura).sort().map(puestoRaw => {
+      const meses = Object.keys(estructura[puestoRaw]).sort().map(mes => {
+        const archivos = estructura[puestoRaw][mes]
+          .sort((a, b) => a.filename.localeCompare(b.filename))
+          .map((a, i) => ({
+            label: `Guía ${i + 1}`,
+            filename: a.filename,
+            url: `https://raw.githubusercontent.com/${USUARIO}/${REPO}/${RAMA}/` +
+                 a.path.split('/').map(encodeURIComponent).join('/')
+          }));
+        return { mes: mes.charAt(0).toUpperCase() + mes.slice(1).toLowerCase(), archivos };
+      });
+      const total = meses.reduce((s, m) => s + m.archivos.length, 0);
+      return { nombre: nombreBonito(puestoRaw), meses, total };
+    }).filter(p => p.total > 0);
+
+    estado.style.display = 'none';
+    buscador.disabled = false;
+    pieTexto.textContent = 'Se actualiza automáticamente · ' + new Date().toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' });
+    render('');
+  } catch (err) {
+    estado.innerHTML = `
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="16" stroke="currentColor" stroke-width="2.5"/>
+        <path d="M22 14V24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="22" cy="30" r="1.6" fill="currentColor"/>
+      </svg>
+      <p>No pudimos cargar las guías en este momento. Verifica tu conexión a internet y vuelve a intentar en unos minutos.</p>`;
+  }
+}
+
+function render(filtro) {
+  const f = filtro.trim().toLowerCase();
+  const filtrados = DATA.filter(p => p.nombre.toLowerCase().includes(f));
+  lista.innerHTML = '';
+
+  if (!filtrados.length) {
+    contador.textContent = '';
+    lista.innerHTML = `
+      <div class="estado">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="19" cy="19" r="13" stroke="currentColor" stroke-width="2.5"/>
+          <path d="M35 35L28 28" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <p>No encontramos ese puesto. Revisa cómo lo escribiste o inténtalo con otra palabra.</p>
+      </div>`;
+    return;
+  }
+
+  contador.textContent = f ? `${filtrados.length} de ${DATA.length} puestos` : `${DATA.length} puestos de salud`;
+
+  filtrados.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'puesto';
+    const mesesHTML = p.meses.map(m => `
+      <div class="mes-block">
+        <div class="mes-label">${m.mes}</div>
+        ${m.archivos.map(a => `
+          <div class="archivo-row">
+            <div>
+              <span class="archivo-label">${a.label}</span>
+              <span class="archivo-file">${a.filename}</span>
+            </div>
+            <a class="dl-btn" href="${a.url}" download>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 1.5V9M7 9L4 6M7 9L10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 11.5V12.2C2 12.6 2.35 13 2.8 13H11.2C11.65 13 12 12.6 12 12.2V11.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              Descargar
+            </a>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <button class="puesto-btn" aria-expanded="false">
+        <div class="puesto-icon">${iniciales(p.nombre)}</div>
+        <div class="puesto-info">
+          <div class="puesto-name">${p.nombre}</div>
+          <div class="puesto-count">${p.total} ${p.total === 1 ? 'guía' : 'guías'}</div>
+        </div>
+        <svg class="chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="puesto-body"><div class="puesto-body-inner">${mesesHTML}</div></div>`;
+
+    const btn = card.querySelector('.puesto-btn');
+    btn.addEventListener('click', () => {
+      const abierto = card.classList.contains('open');
+      card.classList.toggle('open', !abierto);
+      btn.setAttribute('aria-expanded', String(!abierto));
+    });
+    lista.appendChild(card);
+  });
+}
+
+buscador.addEventListener('input', () => render(buscador.value));
+cargar();
+</script>
+</body>
+</html>
